@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import userService from './services/user';
 import { version } from '../package.json';
+import router from '@/router';
 
 Vue.use(Vuex);
 
@@ -9,11 +10,21 @@ const store = new Vuex.Store({
   state: {
     version: '',
     status : {},
-    token: '',
-    user : {},
+    token: localStorage.getItem('token') || null,
+    profile : {},
+    drawer: true,
+    color: 'success',
   },
 
   mutations: {
+    setDrawer(state, drawer) {
+      state.drawer = drawer;
+    },
+
+    toggleDrawer(state) {
+      state.drawer = !(state.drawer);
+    },
+    
     initializeStore(state) {
       // Check if the store exists
       if (localStorage.getItem('store')) {
@@ -31,12 +42,20 @@ const store = new Vuex.Store({
     
     loginSuccess(state, token) {
       state.status = { loggedIn: true };
+      localStorage.setItem( 'token', token );
       state.token = token;
     },
 
-    setUser(state, user) {
+    logout(state) {
+      state.status = { loggedIn: false };
+      localStorage.removeItem( 'token' );
+      state.token = undefined;
+    },
+
+    
+    setProfile(state, user) {
       console.log(user);
-      state.user = user;
+      state.profile = user;
     },
     
     loginFailure(state, error) {
@@ -48,6 +67,19 @@ const store = new Vuex.Store({
   },
   
   actions: {
+    getProfile({ dispatch, commit }) {
+      userService.getUser('me').then(
+        (response) => {
+          if (response.status === 200) {
+            commit( 'setProfile', response.data );
+          }
+        },
+        (error) => {
+          dispatch('alert/error', error, { root: true });
+        },
+      );
+    },
+    
     login({ dispatch, commit }, { email, password }) {
       userService.login(email, password)
         .then(
@@ -55,14 +87,7 @@ const store = new Vuex.Store({
             if (response.status === 200) {
               console.log("Logged in as", email);
               commit( 'loginSuccess', response.data.token );
-
-              userService.getUser('me').then(
-                (response) => {
-                  if (response.status === 200) {
-                    commit( 'setUser', response.data );
-                  }
-                }
-              );
+              router.push( '/' );
             } else {
               commit('loginFailure', response.status );
             }
@@ -75,8 +100,7 @@ const store = new Vuex.Store({
     },
     
     logout({ commit }) {
-        userService.logout();
-        commit('logout');
+      commit('logout');
     },
     
     signup({ dispatch, commit }, user) {
