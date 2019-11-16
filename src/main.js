@@ -17,6 +17,7 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
+  vuetify: new Vuetify({}),
   render: h => h(App),
   beforeCreate() {
     this.$store.commit('initializeStore');

@@ -5,6 +5,8 @@ import Home from './views/Home.vue';
 import Signup from './views/Signup.vue';
 import Login from './views/Login.vue';
 import Profile from './views/Profile.vue';
+import Courses from './views/Courses.vue';
+import Grades from './views/Grades.vue';
 
 Vue.use(Router);
 
@@ -26,6 +28,16 @@ const router = new Router({
       path: '/signup',
       name: 'Signup',
       component: Signup
+    },
+    {
+      path: '/courses',
+      name: 'Courses',
+      component: Courses
+    },
+    {
+      path: '/courses/:id',
+      name: 'Grades',
+      component: Grades
     },
     {
       path: '/login',

@@ -51,6 +51,7 @@
           content-class="dropdown-menu"
           offset-y
           transition="slide-y-transition">
+	  <template v-slot:activator="{ on }">
           <router-link
             v-ripple
             slot="activator"
@@ -64,20 +65,21 @@
               <template slot="badge">
                 {{ notifications.length }}
               </template>
-              <v-icon color="tertiary">mdi-bell</v-icon>
+              <v-icon color="tertiary" 	      v-on="on" >mdi-bell</v-icon>
             </v-badge>
           </router-link>
+	  </template>
           <v-card>
             <v-list dense>
-              <v-list-tile
+              <v-list-item
                 v-for="notification in notifications"
                 :key="notification"
                 @click="onClick"
               >
-                <v-list-tile-title
+                <v-list-item-title
                   v-text="notification"
                 />
-              </v-list-tile>
+              </v-list-item>
             </v-list>
           </v-card>
         </v-menu>
@@ -85,29 +87,32 @@
         <v-menu
           bottom
           left
+	  open-on-hover
           content-class="dropdown-menu"
 	  v-if="loggedIn"
           offset-y
           transition="slide-y-transition">
+	  <template v-slot:activator="{ on }">
           <router-link
             v-ripple
             slot="activator"
             class="toolbar-items"
             to="/profile"
             >
-	    <v-icon color="tertiary">mdi-account</v-icon>
+	    <v-icon 	    v-on="on" color="tertiary">mdi-account</v-icon>
           </router-link>
+	  </template>
           <v-card>
             <v-list dense>
-	      <v-list-tile @click="logout">
-		<v-list-tile-action>
+	      <v-list-item @click="logout">
+		<v-list-item-action>
 		  <v-icon>mdi-logout</v-icon>
-		</v-list-tile-action>
+		</v-list-item-action>
 		
-		<v-list-tile-content>
-		  <v-list-tile-title>Logout</v-list-tile-title>
-		</v-list-tile-content>
-	      </v-list-tile>
+		<v-list-item-content>
+		  <v-list-item-title>Logout</v-list-item-title>
+		</v-list-item-content>
+	      </v-list-item>
             </v-list>
           </v-card>
         </v-menu>

@@ -53,8 +53,16 @@
                   <v-btn
                     class="mx-0 font-weight-light"
                     color="success"
+		    @click="submit"
                   >
                     Update Profile
+                  </v-btn>
+                  <v-btn
+                    class="mx-0 font-weight-light"
+                    color="warning"
+		    @click="logout"
+                  >
+                    Log out
                   </v-btn>
                 </v-flex>
               </v-layout>
@@ -132,6 +140,10 @@ export default {
         birthday: this.birthday,
         housing: this.housing	    
       });
+    },
+
+    logout () {
+      this.$store.dispatch('logout').then(() => this.$router.push('/'));
     },
 
     /*

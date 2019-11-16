@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import userService from './services/user';
+import courseService from './services/course';
 import { version } from '../package.json';
 import router from '@/router';
 
@@ -12,6 +13,9 @@ const store = new Vuex.Store({
     status : {},
     token: localStorage.getItem('token') || null,
     profile : {},
+    instructorCourseIds: [],
+    learnerCourseIds: [],
+    courses: {},
     drawer: true,
     color: 'success',
   },
@@ -52,21 +56,81 @@ const store = new Vuex.Store({
       state.token = undefined;
     },
 
-    
     setProfile(state, user) {
       console.log(user);
       state.profile = user;
     },
+
+    addCourse(state, course) {
+      console.log(course);
+      Vue.set(state.courses, course.id, course);
+      //state.courses[course.id] = course;
+    },    
+
+    setInstructorCourseIds(state, courseIds) {
+      state.instructorCourseIds = courseIds;
+    },
+
+    setLearnerCourseIds(state, courseIds) {
+      console.log("courseIds=",courseIds);
+      state.learnerCourseIds = courseIds;
+    },        
     
     loginFailure(state, error) {
       state.status = { };
       state.token = null;
       state.user = null;
     },
-
   },
   
   actions: {
+    getCourse({ dispatch, commit }, id) {
+      courseService.getCourse(id).then(
+        (response) => {
+          if (response.status === 200) {
+            commit( 'addCourse', response.data );
+          }
+        },
+        (error) => {
+          dispatch('alert/error', error, { root: true });
+        },
+      );
+    },
+    
+    getLearnerCourses({ dispatch, commit }) {
+      userService.getLearnerCourseIds().then(
+        (response) => {
+          if (response.status === 200) {
+            commit( 'setLearnerCourseIds', response.data );
+
+            for( const id of response.data ) {
+              dispatch( 'getCourse', id );
+            }
+          }
+        },
+        (error) => {
+          dispatch('alert/error', error, { root: true });
+        },
+      );
+    },
+
+    getInstructorCourses({ dispatch, commit }) {
+      userService.getInstructorCourseIds().then(
+        (response) => {
+          if (response.status === 200) {
+            commit( 'setInstructorCourseIds', response.data );
+            
+            for( const id of response.data ) {
+              dispatch( 'getCourse', id );
+            }           
+          }
+        },
+        (error) => {
+          dispatch('alert/error', error, { root: true });
+        },
+      );
+    },    
+    
     getProfile({ dispatch, commit }) {
       userService.getUser('me').then(
         (response) => {
@@ -123,6 +187,12 @@ const store = new Vuex.Store({
             );
     }
   },
+
+  getters: {
+    instructorCourses: (state) => state.instructorCourseIds.map( id => state.courses[id] ? state.courses[id] : { name: id, id: id } ),
+    learnerCourses: (state) => state.learnerCourseIds.map( id => state.courses[id] ? state.courses[id] : { name: id, id: id } ),
+  },
+  
 });
 
 export default store;

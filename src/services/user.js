@@ -22,4 +22,12 @@ export default {
     return axios.get(`/users/${id}`, { headers: authorization() } );
   },
 
+  async getLearnerCourseIds() {
+    return axios.get(`/learners/me/courses`, { headers: authorization() } );
+  },
+
+  async getInstructorCourseIds() {
+    return axios.get(`/instructors/me/courses`, { headers: authorization() } );
+  },
+  
 };
