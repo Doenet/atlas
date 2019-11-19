@@ -25,7 +25,7 @@
                 >
                   <v-text-field
                     label="Email Address"
-                    v-model="email"		    
+                    v-model="email"
                     class="purple-input"/>
                 </v-flex>
                 <v-flex
@@ -34,7 +34,7 @@
                 >
                   <v-text-field
                     label="First Name"
-                    v-model="firstName"		    
+                    v-model="firstName"
                     class="purple-input"/>
                 </v-flex>
                 <v-flex
@@ -76,7 +76,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-  
+
 export default {
   computed: {
     email: {
@@ -86,10 +86,10 @@ export default {
       set(value) {
         const data = {
           key: 'email',
-          value: value
-        }
+          value,
+        };
         this.addProfileData(data);
-      }
+      },
     },
 
     firstName: {
@@ -99,10 +99,10 @@ export default {
       set(value) {
         const data = {
           key: 'firstName',
-          value: value
-        }
+          value,
+        };
         this.addProfileData(data);
-      }
+      },
     },
 
     lastName: {
@@ -112,16 +112,16 @@ export default {
       set(value) {
         const data = {
           key: 'lastName',
-          value: value
-        }
+          value,
+        };
         this.addProfileData(data);
-      }
+      },
     },
   },
 
-  data(){
+  data() {
     return {
-    }
+    };
   },
 
   methods: {
@@ -129,7 +129,7 @@ export default {
       'changeMyPassword',
       'getProfile',
       'addProfileData',
-      'saveProfile'
+      'saveProfile',
     ]),
     submit() {
       return this.saveProfile({
@@ -138,11 +138,11 @@ export default {
         phone: this.phone,
         address: this.address,
         birthday: this.birthday,
-        housing: this.housing	    
+        housing: this.housing,
       });
     },
 
-    logout () {
+    logout() {
       this.$store.dispatch('logout').then(() => this.$router.push('/'));
     },
 
@@ -171,11 +171,11 @@ export default {
         this.close()
         return
       }
-    }*/
+    } */
   },
-  
+
   mounted() {
     return this.getProfile();
-  }
-}
+  },
+};
 </script>

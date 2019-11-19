@@ -45,9 +45,9 @@ export default {
     submit() {
     },
   },
-  
+
   mounted() {
     return this.getLearnerCourses();
-  }
-}
+  },
+};
 </script>

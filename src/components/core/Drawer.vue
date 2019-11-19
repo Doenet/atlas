@@ -66,8 +66,8 @@
 // Utilities
 import {
   mapMutations,
-  mapState
-} from 'vuex'
+  mapState,
+} from 'vuex';
 
 export default {
   data: () => ({
@@ -76,61 +76,61 @@ export default {
       {
         to: '/dashboard',
         icon: 'mdi-view-dashboard',
-        text: 'Dashboard'
+        text: 'Dashboard',
       },
       {
         to: '/profile',
         icon: 'mdi-account',
-        text: 'You'
+        text: 'You',
       },
       {
         to: '/courses',
         icon: 'mdi-golf',
-        text: 'Courses'
+        text: 'Courses',
       },
       {
         to: '/assignments',
         icon: 'mdi-progress-check',
-        text: 'Assignments'
+        text: 'Assignments',
       },
     ],
-    responsive: false
+    responsive: false,
   }),
   computed: {
     ...mapState(['color']),
     inputValue: {
-      get () {
+      get() {
         return this.$store.state.drawer;
       },
-      set (val) {
+      set(val) {
         this.setDrawer(val);
-      }
+      },
     },
-    items () {
-      return this.$t('Layout.View.items')
+    items() {
+      return this.$t('Layout.View.items');
     },
-    sidebarOverlayGradiant () {
-      return "rgba(27, 27, 27, 0.74), rgba(27, 27, 27, 0.74)";
-    }
+    sidebarOverlayGradiant() {
+      return 'rgba(27, 27, 27, 0.74), rgba(27, 27, 27, 0.74)';
+    },
   },
-  mounted () {
-    this.onResponsiveInverted()
-    window.addEventListener('resize', this.onResponsiveInverted)
+  mounted() {
+    this.onResponsiveInverted();
+    window.addEventListener('resize', this.onResponsiveInverted);
   },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.onResponsiveInverted)
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResponsiveInverted);
   },
   methods: {
     ...mapMutations(['setDrawer']),
-    onResponsiveInverted () {
+    onResponsiveInverted() {
       if (window.innerWidth < 991) {
         this.responsive = true;
       } else {
         this.responsive = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss">

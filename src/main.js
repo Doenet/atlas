@@ -8,6 +8,9 @@ import '@mdi/font/css/materialdesignicons.css';
 import '@/styles/index.scss';
 
 import Vuetify from 'vuetify';
+
+import './components';
+
 Vue.use(Vuetify, {
   iconfont: 'mdi',
 });
@@ -21,7 +24,5 @@ new Vue({
   render: h => h(App),
   beforeCreate() {
     this.$store.commit('initializeStore');
-  }
+  },
 }).$mount('#app');
-
-import './components';

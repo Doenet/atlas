@@ -44,7 +44,7 @@
         >
           <v-icon color="tertiary">mdi-view-dashboard</v-icon>
         </router-link>
-	
+
         <v-menu
           bottom
           left
@@ -108,7 +108,7 @@
 		<v-list-item-action>
 		  <v-icon>mdi-logout</v-icon>
 		</v-list-item-action>
-		
+
 		<v-list-item-content>
 		  <v-list-item-title>Logout</v-list-item-title>
 		</v-list-item-content>
@@ -132,26 +132,26 @@ export default {
       'You have 5 new tasks',
       'You\'re now a friend with Andrew',
       'Another Notification',
-      'Another One'
+      'Another One',
     ],
     title: null,
     responsive: false,
-    responsiveInput: false
+    responsiveInput: false,
   }),
 
   watch: {
-    '$route' (val) {
-      this.title = val.name
-    }
+    $route(val) {
+      this.title = val.name;
+    },
   },
 
-  mounted () {
-    this.onResponsiveInverted()
-    window.addEventListener('resize', this.onResponsiveInverted)
+  mounted() {
+    this.onResponsiveInverted();
+    window.addEventListener('resize', this.onResponsiveInverted);
   },
-  
-  beforeDestroy () {
-    window.removeEventListener('resize', this.onResponsiveInverted)
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResponsiveInverted);
   },
 
   computed: {
@@ -161,33 +161,33 @@ export default {
       },
     },
   },
-  
+
   methods: {
     ...mapMutations(['toggleDrawer']),
-    
-    onClickBtn () {
+
+    onClickBtn() {
       this.toggleDrawer();
     },
-    
-    onClick () {
+
+    onClick() {
       //
     },
-    
-    logout () {
+
+    logout() {
       this.$store.dispatch('logout').then(() => this.$router.push('/'));
     },
-    
-    onResponsiveInverted () {
+
+    onResponsiveInverted() {
       if (window.innerWidth < 991) {
-        this.responsive = true
-        this.responsiveInput = false
+        this.responsive = true;
+        this.responsiveInput = false;
       } else {
-        this.responsive = false
-        this.responsiveInput = true
+        this.responsive = false;
+        this.responsiveInput = true;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>

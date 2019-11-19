@@ -3,6 +3,7 @@
     <core-toolbar />
     <core-drawer />
     <core-view />
+    <core-snackbar />    
   </v-app>
 </template>
 

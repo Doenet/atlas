@@ -22,28 +22,28 @@ const router = new Router({
     {
       path: '/profile',
       name: 'Profile',
-      component: Profile
-    },    
+      component: Profile,
+    },
     {
       path: '/signup',
       name: 'Signup',
-      component: Signup
+      component: Signup,
     },
     {
       path: '/courses',
       name: 'Courses',
-      component: Courses
+      component: Courses,
     },
     {
       path: '/courses/:id',
       name: 'Grades',
-      component: Grades
+      component: Grades,
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login
-    }
+      component: Login,
+    },
   ],
 });
 
@@ -52,13 +52,12 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.path != '/login');
 
   if (requiresAuth && (!store.state.token)) {
-    return next('/login')
-  } else {
-    //checkIfTokenNeedsRefresh()
-    //store.commit(types.SUCCESS, null)
-    //store.commit(types.ERROR, null)
-    return next();
+    return next('/login');
   }
-})
+  // checkIfTokenNeedsRefresh()
+  // store.commit(types.SUCCESS, null)
+  // store.commit(types.ERROR, null)
+  return next();
+});
 
 export default router;
