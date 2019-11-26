@@ -9,7 +9,6 @@ function authorization() {
 
 export default {
   async login(email, password) {
-    console.log(email, password);
     return axios.get(`/users/${email}/token`, {
       auth: {
         username: email,
@@ -20,6 +19,10 @@ export default {
 
   async getUser(id) {
     return axios.get(`/users/${id}`, { headers: authorization() });
+  },
+
+  async patchUser(id, data) {
+    return axios.patch(`/users/${id}`, data, { headers: authorization() });
   },
 
   async getLearnerCourseIds() {

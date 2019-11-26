@@ -1,3 +1,6 @@
+import vueMoment from 'vue-moment';
+import Vuetify from 'vuetify';
+
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
@@ -7,13 +10,13 @@ import 'vuetify/dist/vuetify.min.css';
 import '@mdi/font/css/materialdesignicons.css';
 import '@/styles/index.scss';
 
-import Vuetify from 'vuetify';
 
 import './components';
 
 Vue.use(Vuetify, {
   iconfont: 'mdi',
 });
+Vue.use(vueMoment);
 
 Vue.config.productionTip = false;
 

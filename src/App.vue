@@ -1,16 +1,14 @@
 <template>
   <v-app>
-    <core-toolbar />
     <core-drawer />
+    <core-toolbar />
     <core-view />
-    <core-snackbar />    
+    <core-footer/>
+    <core-snackbar />
   </v-app>
 </template>
 
-<style lang="scss">
-
-/* Remove in 1.2 */
-.v-datatable thead th.column.sortable i {
-  vertical-align: unset;
-}
-</style>
+<script>
+export default {
+};
+</script>

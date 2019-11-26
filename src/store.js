@@ -18,7 +18,7 @@ const store = new Vuex.Store({
     courses: {},
     drawer: true,
     color: 'success',
-    snackbar: { snack: '' }
+    snackbar: { snack: '' },
   },
 
   mutations: {
@@ -33,12 +33,12 @@ const store = new Vuex.Store({
     initializeStore(state) {
       // Check if the store exists
       if (localStorage.getItem('store')) {
-        const store = JSON.parse(localStorage.getItem('store'));
+        const localStore = JSON.parse(localStorage.getItem('store'));
 
         // Check the version stored against current. If different, don't
         // load the cached version
-        if (store.version == version) {
-          this.replaceState(Object.assign(state, store));
+        if (localStore.version === version) {
+          this.replaceState(Object.assign(state, localStore));
         } else {
           state.version = version;
         }
@@ -58,14 +58,12 @@ const store = new Vuex.Store({
     },
 
     setProfile(state, user) {
-      console.log(user);
       state.profile = user;
     },
 
     addCourse(state, course) {
       console.log(course);
       Vue.set(state.courses, course.id, course);
-      // state.courses[course.id] = course;
     },
 
     setInstructorCourseIds(state, courseIds) {
@@ -77,7 +75,7 @@ const store = new Vuex.Store({
       state.learnerCourseIds = courseIds;
     },
 
-    loginFailure(state, error) {
+    loginFailure(state, error) { // eslint-disable-line no-unused-vars
       state.status = { };
       state.token = null;
       state.user = null;
@@ -85,14 +83,14 @@ const store = new Vuex.Store({
 
     setSnack(state, snack) {
       state.snackbar.snack = snack;
-    }    
+    },
   },
 
   actions: {
-    alertError({ dispatch, commit }, error ) {
-      commit('setSnack', error);            
+    alertError({ dispatch, commit }, error) { // eslint-disable-line no-unused-vars
+      commit('setSnack', error);
     },
-    
+
     getCourse({ dispatch, commit }, id) {
       courseService.getCourse(id).then(
         (response) => {
@@ -153,6 +151,46 @@ const store = new Vuex.Store({
       );
     },
 
+    updateCourse({ dispatch, commit }, { id, data }) {
+      courseService.patchCourse(id, data).then(
+        (response) => {
+          if (response.status === 200) {
+            commit('addCourse', response.data);
+          }
+        },
+        (error) => {
+          dispatch('alertError', error, { root: true });
+        },
+      );
+    },
+
+    addAssignmentToCourse({ dispatch, commit }, { id, assignment }) {
+      courseService.patchCourse(id, { assignments: store.state.courses[id].assignments.concat([assignment]) }).then(
+        (response) => {
+          if (response.status === 200) {
+            commit('addCourse', response.data);
+          }
+        },
+        (error) => {
+          dispatch('alertError', error, { root: true });
+        },
+      );
+    },
+
+
+    updateProfile({ dispatch, commit }, data) {
+      userService.patchUser('me', data).then(
+        (response) => {
+          if (response.status === 200) {
+            commit('setProfile', response.data);
+          }
+        },
+        (error) => {
+          dispatch('alertError', error, { root: true });
+        },
+      );
+    },
+
     login({ dispatch, commit }, { email, password }) {
       userService.login(email, password)
         .then(
@@ -176,10 +214,24 @@ const store = new Vuex.Store({
       commit('logout');
     },
 
-    signup({ dispatch, commit }, user) {
-      commit('registerRequest', user);
+    createCourse({ dispatch, commit }, name) {
+      courseService.createCourse(name).then(
+        (response) => {
+          if (response.status === 200) {
+            commit('addCourse', response.data);
+            dispatch('getIntructorCourses');
+          }
+        },
+        (error) => {
+          dispatch('alertError', error, { root: true });
+        },
+      );
+    },
 
-      userService.register(user)
+    signup({ dispatch, commit }, userData) {
+      commit('registerRequest', userData);
+
+      userService.register(userData)
         .then(
           (user) => {
             commit('registerSuccess', user);

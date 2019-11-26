@@ -1,103 +1,148 @@
 <template>
   <v-navigation-drawer
     id="app-drawer"
-    v-model="inputValue"
-    app
-    dark
-    floating
-    persistent
-    mobile-break-point="991"
-    width="240"
-  >
-    <v-img
-      src="/img/books.jpg"
-      :gradient="sidebarOverlayGradiant"
-      height="100%"
+    v-model="inputValue" app
     >
-      <v-layout
-        class="fill-height"
-        tag="v-list"
-        column
-      >
-        <v-list-item>
-          <v-list-item-avatar
-            color="white"
-          >
-            <v-img
-              :src="logo"
-              height="34"
-              contain
-            />
+    <v-list dense>
+        <v-list-item two-line>
+          <v-list-item-avatar>
+            <img v-if="profile.jpegPhotograph" :src="profile.jpegPhotograph"/>
+	    <v-icon v-else>mdi-account-circle</v-icon>
           </v-list-item-avatar>
-          <v-list-item-title class="title">
-            Grayedbook
-          </v-list-item-title>
+
+          <v-list-item-content>
+            <v-list-item-title v-if="profile.firstName || profile.lastName">
+	      {{profile.firstName}} {{profile.lastName}}</v-list-item-title>
+            <v-list-item-title v-else>Anonymous User</v-list-item-title>
+            <v-list-item-subtitle v-if="profile.guest">Logged in as guest</v-list-item-subtitle>
+	    <v-list-item-subtitle v-else>Logged in</v-list-item-subtitle>
+          </v-list-item-content>
         </v-list-item>
-        <v-divider/>
+	<v-divider/>
+
         <v-list-item
-          v-if="responsive"
-        >
-          <v-text-field
-            class="purple-input search-input"
-            label="Search..."
-            color="purple"
-          />
-        </v-list-item>
-        <v-list-item
-          v-for="(link, i) in links"
-          :key="i"
-          :to="link.to"
-          :active-class="color"
-          class="v-list-item"
+          v-for="item in items"
+          :key="item.text"
+	  :to="item.to"
+          link
         >
           <v-list-item-action>
-            <v-icon>{{ link.icon }}</v-icon>
+            <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
-          <v-list-item-title
-            v-text="link.text"
-          />
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ item.text }}
+            </v-list-item-title>
+          </v-list-item-content>
+
         </v-list-item>
-      </v-layout>
-    </v-img>
+
+        <v-subheader  class="mt-4 grey--text text--darken-1">COURSES YOU'RE TAKING</v-subheader>
+        <v-list>
+          <v-list-item
+            v-for="course in learnerCourses"
+            :key="course.id"
+	    :to="'/learners/me/courses/' + course.id"
+            link
+            >
+	    <v-list-item-icon><v-icon>mdi-golf</v-icon></v-list-item-icon>
+            <v-list-item-title v-text="course.name" />
+          </v-list-item>
+
+	  <v-dialog v-model="enrollmentDialog" persistent max-width="600px">
+	    <template v-slot:activator="{ on }">
+	      <v-list-item link v-on="on">
+		<v-list-item-icon><v-icon>mdi-plus-circle-outline</v-icon></v-list-item-icon>
+		<v-list-item-title>Enroll in course</v-list-item-title>
+	      </v-list-item>
+	    </template>
+	    <v-card>
+              <v-card-title>
+		<span class="headline">Enroll in course</span>
+              </v-card-title>
+              <v-card-text>
+		<v-container>
+		  <v-row>
+		    <v-col cols="12">
+                      <v-text-field :rules="[ruleEnrollmentCode]" v-model="courseEnrollmentCode" label="Course enrollment code" required></v-text-field>
+		    </v-col>
+		  </v-row>
+		</v-container>
+		<small>An enrollment code is seven five-letter words separated by dashes.</small>
+              </v-card-text>
+              <v-card-actions>
+		<v-spacer></v-spacer>
+		<v-btn color="blue darken-1" text @click="enrollmentDialog = false">Close</v-btn>
+		<v-btn color="blue darken-1" text @click="enrollmentDialog = false; viewCourse();">View course</v-btn>
+              </v-card-actions>
+	    </v-card>
+	  </v-dialog>
+        </v-list>
+
+	<template v-if="profile.isInstructor">
+        <v-subheader  class="mt-4 grey--text text--darken-1">COURSES YOU'RE TEACHING</v-subheader>
+        <v-list>
+          <v-list-item
+            v-for="course in instructorCourses"
+            :key="course.id"
+	    :to="'/instructors/me/courses/' + course.id"
+            link
+            >
+	    <v-list-item-icon><v-icon>mdi-teach</v-icon></v-list-item-icon>
+            <v-list-item-title v-text="course.name" />
+          </v-list-item>
+
+	  <v-list-item link to="/instructors/me/courses/new">
+	    <v-list-item-icon><v-icon>mdi-plus-circle-outline</v-icon></v-list-item-icon>
+            <v-list-item-title>Create new course</v-list-item-title>
+	  </v-list-item>
+
+        </v-list>
+	</template>
+
+    </v-list>
+
+    <template v-slot:append>
+      <div class="pa-2">
+        <v-btn block color='warning' @click="logout">Logout</v-btn>
+      </div>
+    </template>
   </v-navigation-drawer>
 </template>
 
 <script>
+import bubble from 'bubble_babble';
+
 // Utilities
 import {
+  mapActions,
+  mapGetters,
   mapMutations,
   mapState,
 } from 'vuex';
 
 export default {
   data: () => ({
-    logo: './img/vuetifylogo.png',
-    links: [
-      {
-        to: '/dashboard',
-        icon: 'mdi-view-dashboard',
-        text: 'Dashboard',
-      },
-      {
-        to: '/profile',
-        icon: 'mdi-account',
-        text: 'You',
-      },
-      {
-        to: '/courses',
-        icon: 'mdi-golf',
-        text: 'Courses',
-      },
-      {
-        to: '/assignments',
-        icon: 'mdi-progress-check',
-        text: 'Assignments',
-      },
+    enrollmentDialog: false,
+    drawer: null,
+    courseEnrollmentCode: '',
+    items: [
+      { icon: 'mdi-view-dashboard', text: 'Dashboard', to: '/' },
+      { icon: 'mdi-account', text: 'Your Profile', to: '/profile' },
+      { icon: 'mdi-progress-check', text: 'Assignments', to: '/assignments' },
     ],
-    responsive: false,
+
   }),
+
   computed: {
-    ...mapState(['color']),
+    ...mapState(['profile']),
+
+    ...mapGetters([
+      'learnerCourses',
+      'instructorCourses',
+    ]),
+
+
     inputValue: {
       get() {
         return this.$store.state.drawer;
@@ -106,57 +151,46 @@ export default {
         this.setDrawer(val);
       },
     },
-    items() {
-      return this.$t('Layout.View.items');
-    },
     sidebarOverlayGradiant() {
       return 'rgba(27, 27, 27, 0.74), rgba(27, 27, 27, 0.74)';
     },
   },
+  created() {
+    this.getLearnerCourses();
+    this.getInstructorCourses();
+  },
+
   mounted() {
-    this.onResponsiveInverted();
-    window.addEventListener('resize', this.onResponsiveInverted);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.onResponsiveInverted);
   },
   methods: {
     ...mapMutations(['setDrawer']),
-    onResponsiveInverted() {
-      if (window.innerWidth < 991) {
-        this.responsive = true;
-      } else {
-        this.responsive = false;
+    ...mapActions([
+      'getLearnerCourses',
+      'getInstructorCourses',
+    ]),
+    ruleEnrollmentCode() {
+      if (this.courseEnrollmentCode.length === 0) return true;
+      try {
+        bubble.decode(this.courseEnrollmentCode).toString('hex');
+        return true;
+      } catch (e) {
+        return 'invalid enrollment code';
       }
+    },
+    viewCourse() {
+      try {
+        const decodedEnrollmentCode = bubble.decode(this.courseEnrollmentCode).toString('hex');
+        console.log(decodedEnrollmentCode);
+        this.$router.push({ name: 'LearnerCourse', params: { id: decodedEnrollmentCode } });
+      } catch (e) {
+        this.$store.dispatch('alertError', 'Invalid enrollment code');
+      }
+    },
+    logout() {
+      this.$store.dispatch('logout').then(() => this.$router.push('/'));
     },
   },
 };
 </script>
-
-<style lang="scss">
-  #app-drawer {
-    .v-list__tile {
-      border-radius: 4px;
-
-      &--buy {
-        margin-top: auto;
-        margin-bottom: 17px;
-      }
-    }
-
-    .v-image__image--contain {
-      top: 9px;
-      height: 60%;
-    }
-
-    .search-input {
-      margin-bottom: 30px !important;
-      padding-left: 15px;
-      padding-right: 15px;
-    }
-
-    div.v-responsive.v-image > div.v-responsive__content {
-      overflow-y: auto;
-    }
-  }
-</style>

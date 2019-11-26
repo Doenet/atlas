@@ -11,4 +11,13 @@ export default {
   async getCourse(id) {
     return axios.get(`/courses/${id}`, { headers: authorization() });
   },
+
+  async createCourse(name) {
+    return axios.post('/courses', { name }, { headers: authorization() });
+  },
+
+  async patchCourse(id, data) {
+    return axios.patch(`/courses/${id}`, data, { headers: authorization() });
+  },
+
 };

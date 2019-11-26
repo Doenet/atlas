@@ -6,7 +6,10 @@ import Signup from './views/Signup.vue';
 import Login from './views/Login.vue';
 import Profile from './views/Profile.vue';
 import Courses from './views/Courses.vue';
-import Grades from './views/Grades.vue';
+import LearnerCourse from './views/LearnerCourse.vue';
+import InstructorCourse from './views/InstructorCourse.vue';
+import InstructorCourseAssignment from './views/InstructorCourseAssignment.vue';
+import NewInstructorCourse from './views/NewInstructorCourse.vue';
 
 Vue.use(Router);
 
@@ -35,9 +38,27 @@ const router = new Router({
       component: Courses,
     },
     {
-      path: '/courses/:id',
-      name: 'Grades',
-      component: Grades,
+      path: '/instructors/me/courses/new',
+      name: 'NewInstructorCourse',
+      component: NewInstructorCourse,
+    },
+    {
+      path: '/instructors/me/courses/:id',
+      name: 'InstructorCourse',
+      component: InstructorCourse,
+      props: true,
+    },
+    {
+      path: '/instructors/me/courses/:id/assignments/:assignmentIndex',
+      name: 'InstructorCourseAssignment',
+      component: InstructorCourseAssignment,
+      props: true,
+    },
+    {
+      path: '/learners/me/courses/:id',
+      name: 'LearnerCourse',
+      component: LearnerCourse,
+      props: true,
     },
     {
       path: '/login',
@@ -49,7 +70,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // BADBAD: checkForUpdates()
-  const requiresAuth = to.matched.some(record => record.path != '/login');
+  const requiresAuth = to.matched.some(record => record.path !== '/login');
 
   if (requiresAuth && (!store.state.token)) {
     return next('/login');

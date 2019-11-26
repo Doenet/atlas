@@ -9,8 +9,7 @@
     >
       <v-flex
         xs12
-        md12
-	>
+        md12>
 	<v-list>
           <v-list-item v-for="course in learnerCourses" :to="{ name: 'Grades', params: { id: course.id }}" :key="course.id">
 	    <v-list-item-content>

@@ -25,21 +25,21 @@
 export default {
   data() {
     return {
-      name : '',
-      email : '',
-      password : '',
-      password2 : '',
+      name: '',
+      email: '',
+      password: '',
+      password2: '',
     };
   },
 
   methods: {
-    signup: function () {
-      let info = {
+    signup() {
+      const info = {
         name: this.name,
         email: this.email,
-        password: this.password
+        password: this.password,
       };
-      
+
       this.$store.dispatch('signup', info).then(() => this.$router.push('/login'));
     },
   },

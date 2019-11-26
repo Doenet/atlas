@@ -55,25 +55,25 @@
 
 <script>
 export default {
-  data(){
+  data() {
     return {
-      email : '',
-      password : '',
-    }
+      email: '',
+      password: '',
+    };
   },
 
   methods: {
-    login: function () {
-      const email = this.email;
-      const password = this.password;
+    login() {
+      const { email } = this;
+      const { password } = this;
       this.$store.dispatch('login', { email, password });
-    }
+    },
   },
 
   created() {
     if (this.$store.state.token) {
-      router.push({ name: '/' });
+      this.$router.push({ name: '/' });
     }
   },
-}
+};
 </script>
