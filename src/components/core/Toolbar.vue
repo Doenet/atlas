@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app dense>
     <v-app-bar-nav-icon color='black' @click.stop="onClickBtn" />
-    <v-toolbar-title>Doenet LRS</v-toolbar-title>
+    <v-toolbar-title>Doenet Learning Records</v-toolbar-title>
   </v-app-bar>
 </template>
 

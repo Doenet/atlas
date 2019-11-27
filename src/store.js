@@ -164,6 +164,25 @@ const store = new Vuex.Store({
       );
     },
 
+    updateAssignment({ dispatch, commit }, { id, assignmentIndex, data }) {
+      const courseData = { assignments: [] };
+      for (const assignment in store.state.courses[id].assignments) {
+        courseData.assignments.push(Object.assign({}, assignment));
+      }
+      Object.assign(courseData.assignments[assignmentIndex], data);
+
+      courseService.patchCourse(id, courseData).then(
+        (response) => {
+          if (response.status === 200) {
+            commit('addCourse', response.data);
+          }
+        },
+        (error) => {
+          dispatch('alertError', error, { root: true });
+        },
+      );
+    },
+
     addAssignmentToCourse({ dispatch, commit }, { id, assignment }) {
       courseService.patchCourse(id, { assignments: store.state.courses[id].assignments.concat([assignment]) }).then(
         (response) => {
