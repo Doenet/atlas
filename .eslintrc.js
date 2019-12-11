@@ -13,6 +13,8 @@ module.exports = {
     'no-tabs': 0,
     'no-mixed-spaces-and-tabs': 0,
     'max-len': 0,
+    'template-curly-spacing': 0,
+    indent: 0,
     'no-restricted-syntax': 0,
     'import/no-cycle': 0,
   },

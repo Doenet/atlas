@@ -59,7 +59,7 @@
         md12
         >
         <v-checkbox
-          v-model="gpdrConsent"
+          v-model="gdprConsent"
 	  label="I consent to the tracking of my progress and my activity on educational websites which participate in Doenet; my data will be used to provide my instructor with my grades on course assignments, and anonymous data may be provided to content authors to improve the educational effectiveness."
 	  ><v-icon slot="append" to="/privacy-policy">mdi-information</v-icon>
 	</v-checkbox>
@@ -68,9 +68,9 @@
       <v-flex
         xs12
         md12
-        v-if="profile.gpdrConsent"
+        v-if="profile.gdprConsent"
         >
-        <p>You consented to such tracking on {{profile.gpdrConsentDate | moment("dddd, MMMM Do YYYY") }}.</p>
+        <p>You consented to such tracking on {{profile.gdprConsentDate | moment("dddd, MMMM Do YYYY") }}.</p>
       </v-flex>
 
       <v-flex
@@ -134,9 +134,9 @@ export default {
       get() { return this.profile.email; },
       set(v) { this.$set(this.updatedProfile, 'email', v); },
     },
-    gpdrConsent: {
-      get() { return this.profile.gpdrConsent; },
-      set(v) { this.$set(this.updatedProfile, 'gpdrConsent', v); },
+    gdprConsent: {
+      get() { return this.profile.gdprConsent; },
+      set(v) { this.$set(this.updatedProfile, 'gdprConsent', v); },
     },
     isInstructor: {
       get() { return this.profile.isInstructor; },

@@ -11,7 +11,6 @@ const store = new Vuex.Store({
   state: {
     version: '',
     status: {},
-    token: localStorage.getItem('token') || null,
     profile: {},
     instructorCourseIds: [],
     learnerCourseIds: [],
@@ -45,16 +44,12 @@ const store = new Vuex.Store({
       }
     },
 
-    loginSuccess(state, token) {
+    loginSuccess(state) {
       state.status = { loggedIn: true };
-      localStorage.setItem('token', token);
-      state.token = token;
     },
 
     logout(state) {
       state.status = { loggedIn: false };
-      localStorage.removeItem('token');
-      state.token = undefined;
     },
 
     setProfile(state, user) {
@@ -77,7 +72,6 @@ const store = new Vuex.Store({
 
     loginFailure(state, error) { // eslint-disable-line no-unused-vars
       state.status = { };
-      state.token = null;
       state.user = null;
     },
 
@@ -166,9 +160,9 @@ const store = new Vuex.Store({
 
     updateAssignment({ dispatch, commit }, { id, assignmentIndex, data }) {
       const courseData = { assignments: [] };
-      for (const assignment in store.state.courses[id].assignments) {
-        courseData.assignments.push(Object.assign({}, assignment));
-      }
+      store.state.courses[id].assignments.forEach(
+        assignment => courseData.assignments.push(Object.assign({}, assignment)),
+);
       Object.assign(courseData.assignments[assignmentIndex], data);
 
       courseService.patchCourse(id, courseData).then(
@@ -216,7 +210,7 @@ const store = new Vuex.Store({
           (response) => {
             if (response.status === 200) {
               console.log('Logged in as', email);
-              commit('loginSuccess', response.data.token);
+              commit('loginSuccess');
               router.push('/');
             } else {
               commit('loginFailure', response.status);
