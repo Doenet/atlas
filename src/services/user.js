@@ -26,6 +26,14 @@ export default {
     return axios.get('/learners/me/courses');
   },
 
+  async getRecentProgress(id) {
+    return axios.get(`/learners/${id}/progress`);
+  },
+
+  async getLearnerStatements() {
+    return axios.get('/learners/me/statements');
+  },
+
   async getInstructorCourseIds() {
     return axios.get('/instructors/me/courses');
   },

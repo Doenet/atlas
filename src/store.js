@@ -14,7 +14,10 @@ const store = new Vuex.Store({
     profile: {},
     instructorCourseIds: [],
     learnerCourseIds: [],
+    learnerStatements: [],
     courses: {},
+    progress: [],
+    users: {},
     drawer: true,
     color: 'success',
     snackbar: { snack: '' },
@@ -59,6 +62,19 @@ const store = new Vuex.Store({
     addCourse(state, course) {
       console.log(course);
       Vue.set(state.courses, course.id, course);
+    },
+
+    addUser(state, user) {
+      Vue.set(state.users, user.id, user);
+    },
+
+    addProgress(state, progress) {
+      state.progress = progress;
+    },
+
+
+    addLearnerStatements(state, statements) {
+      state.learnerStatements = statements;
     },
 
     setInstructorCourseIds(state, courseIds) {
@@ -132,11 +148,50 @@ const store = new Vuex.Store({
       );
     },
 
+    getLearnerStatements({ dispatch, commit }) {
+      userService.getLearnerStatements().then(
+        (response) => {
+          if (response.status === 200) {
+            commit('addLearnerStatements', response.data);
+          }
+        },
+        (error) => {
+          dispatch('alertError', error, { root: true });
+        },
+      );
+    },
+
     getProfile({ dispatch, commit }) {
       userService.getUser('me').then(
         (response) => {
           if (response.status === 200) {
             commit('setProfile', response.data);
+          }
+        },
+        (error) => {
+          dispatch('alertError', error, { root: true });
+        },
+      );
+    },
+
+    getUser({ dispatch, commit }, id) {
+      userService.getUser(id).then(
+        (response) => {
+          if (response.status === 200) {
+            commit('addUser', response.data);
+          }
+        },
+        (error) => {
+          dispatch('alertError', error, { root: true });
+        },
+      );
+    },
+
+    getRecentProgress({ dispatch, commit }, id) {
+      userService.getRecentProgress(id).then(
+        (response) => {
+          if (response.status === 200) {
+            commit('addProgress', response.data);
           }
         },
         (error) => {
@@ -162,7 +217,7 @@ const store = new Vuex.Store({
       const courseData = { assignments: [] };
       store.state.courses[id].assignments.forEach(
         assignment => courseData.assignments.push(Object.assign({}, assignment)),
-);
+      );
       Object.assign(courseData.assignments[assignmentIndex], data);
 
       courseService.patchCourse(id, courseData).then(

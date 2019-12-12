@@ -7,6 +7,7 @@ import Login from './views/Login.vue';
 import Profile from './views/Profile.vue';
 import Courses from './views/Courses.vue';
 import LearnerCourse from './views/LearnerCourse.vue';
+import User from './views/User.vue';
 import InstructorCourse from './views/InstructorCourse.vue';
 import InstructorCourseAssignment from './views/InstructorCourseAssignment.vue';
 import NewInstructorCourse from './views/NewInstructorCourse.vue';
@@ -31,6 +32,12 @@ const router = new Router({
       path: '/signup',
       name: 'Signup',
       component: Signup,
+    },
+    {
+      path: '/users/:id',
+      name: 'User',
+      component: User,
+      props: true,
     },
     {
       path: '/courses',
@@ -72,7 +79,7 @@ router.beforeEach((to, from, next) => {
   // BADBAD: checkForUpdates()
   const requiresAuth = to.matched.some(record => record.path !== '/login');
 
-  if (requiresAuth && (!store.state.token)) {
+  if (requiresAuth && (!store.state.profile)) {
     return next('/login');
   }
   // checkIfTokenNeedsRefresh()

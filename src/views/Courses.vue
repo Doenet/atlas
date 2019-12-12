@@ -23,13 +23,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   computed: {
-    ...mapGetters([
-      'learnerCourses',
-    ]),
+    ...mapState(['learnerCourses']),
   },
 
   data() {
