@@ -27,6 +27,9 @@
 		<v-list-item-title v-text="p.title"></v-list-item-title>
 		<v-list-item-subtitle v-text="p.url"></v-list-item-subtitle>
 	      </v-list-item-content>
+	      <v-list-item-action>
+                <v-list-item-action-text>{{ p.updatedAt | moment('from', 'now') }}</v-list-item-action-text>
+	      </v-list-item-action>
 	    </v-list-item>
 	  </v-list>
 	</v-card-text>
