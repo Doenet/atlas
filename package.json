@@ -14,7 +14,7 @@
     "axios": "^0.19.0",
     "bubble_babble": "^0.2.0",
     "core-js": "^2.6.5",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "luxon": "^1.21.2",
     "vue": "^2.6.10",
     "vue-cli-plugin-s3-deploy": "^3.0.0",
