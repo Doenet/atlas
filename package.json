@@ -15,7 +15,7 @@
     "bubble_babble": "^0.2.0",
     "core-js": "^2.6.5",
     "lodash": "^4.17.15",
-    "luxon": "^1.21.2",
+    "luxon": "^1.28.1",
     "vue": "^2.6.10",
     "vue-cli-plugin-s3-deploy": "^3.0.0",
     "vue-datetime": "^1.0.0-beta.11",
